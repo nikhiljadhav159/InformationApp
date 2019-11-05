@@ -23,7 +23,7 @@ import kotlinx.android.synthetic.main.fragment_main.*
  * A simple [Fragment] subclass.
  */
 class MainFragment : Fragment() {
-    private lateinit var mainViewModel:MainViewModel
+    private lateinit var mainViewModel: MainViewModel
     private val informationRecyclerViewAdapter = InformationRecyclerViewAdapter()
 
     override fun onCreateView(
@@ -36,16 +36,16 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        srlMain.setOnRefreshListener{
-            if(isConnected()) {
+        srlMain.setOnRefreshListener {
+            if (isConnected()) {
                 Toast.makeText(activity!!, getString(R.string.refreshing), Toast.LENGTH_SHORT).show()
                 mainViewModel.callForInformationData()
-            }else{
+            } else {
                 Toast.makeText(activity!!, getString(R.string.no_internet), Toast.LENGTH_LONG).show()
-              srlMain.isRefreshing = false
+                srlMain.isRefreshing = false
             }
         }
-        rvMain.layoutManager = LinearLayoutManager(activity!!, RecyclerView.VERTICAL,false)
+        rvMain.layoutManager = LinearLayoutManager(activity!!, RecyclerView.VERTICAL, false)
         rvMain.adapter = informationRecyclerViewAdapter
     }
 
@@ -55,16 +55,16 @@ class MainFragment : Fragment() {
             ViewModelProviders.of(this, SavedStateVMFactory(this)).get(MainViewModel::class.java)
         } ?: throw Exception(getString(R.string.invaid_activity))
 
-        mainViewModel.getInformationList().observe(this, Observer { list->
+        mainViewModel.getInformationList().observe(this, Observer { list ->
             srlMain.isRefreshing = false
             run {
-               informationRecyclerViewAdapter.updateInformationList(list)
+                informationRecyclerViewAdapter.updateInformationList(list)
             }
         })
 
-        if(isConnected()) {
+        if (isConnected()) {
             mainViewModel.callForInformationData()
-        }else{
+        } else {
             Toast.makeText(activity!!, getString(R.string.no_internet), Toast.LENGTH_LONG).show()
         }
 
