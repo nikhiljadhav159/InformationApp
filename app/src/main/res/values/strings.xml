@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Information App</string>
+
+    <string name="no_internet">No Internet Connection</string>
+    <string name="refreshing">Refreshing</string>
+    <string name="invaid_activity">Invalid Activity</string>
 </resources>
