@@ -12,21 +12,31 @@ import retrofit2.Callback
 import retrofit2.Response
 
 
-open class MainViewModel(private val savedState: SavedStateHandle) : ViewModel() {
+open class MainViewModel(var savedState: SavedStateHandle) : ViewModel() {
     val TAG = MainViewModel::class.java.simpleName
+    var retriver = InformationApi()
+    val title = MutableLiveData<String>()
+    val informationList = MutableLiveData<ArrayList<Row>>()
 
     companion object {
         val KEY_TITLE = "Title"
         val KEY_INFORMATION_LIST = "InformationList"
     }
 
-    fun getTitle(): MutableLiveData<String> {
+    /**
+     * Get the title livedata from SavedStateHandle
+     */
+    fun getTitleLiveData(): MutableLiveData<String> {
         return savedState.getLiveData(KEY_TITLE)
     }
 
-    fun getInformationList(): MutableLiveData<ArrayList<Row>> {
+    /**
+     * Get the arraylist from SavedStateHandle
+     */
+    fun getInformationListLiveData(): MutableLiveData<ArrayList<Row>> {
         return savedState.getLiveData(KEY_INFORMATION_LIST)
     }
+
 
     fun callForInformationData() {
         //region creating a callback for response
@@ -34,8 +44,11 @@ open class MainViewModel(private val savedState: SavedStateHandle) : ViewModel()
 
             override fun onResponse(call: Call<InformationResponse>?, response: Response<InformationResponse>?) {
                 val informationResponse = response?.body()!!
+                title.postValue(informationResponse.title)
+                informationList.postValue(informationResponse.rows as ArrayList<Row>)
+                savedState.set(KEY_INFORMATION_LIST, informationResponse.rows)
                 savedState.set(KEY_TITLE, informationResponse.title)
-                savedState.set(KEY_INFORMATION_LIST, informationResponse.rows as ArrayList<Row>)
+
             }
 
             override fun onFailure(call: Call<InformationResponse>?, t: Throwable?) {
@@ -45,7 +58,6 @@ open class MainViewModel(private val savedState: SavedStateHandle) : ViewModel()
         //endregion
 
         //region create request call and handle the callback
-        val retriver = InformationApi()
         retriver.getInformation(callback)
         //endregion
     }

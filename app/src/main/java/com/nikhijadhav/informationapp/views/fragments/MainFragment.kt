@@ -55,7 +55,7 @@ class MainFragment : Fragment() {
             ViewModelProviders.of(this, SavedStateVMFactory(this)).get(MainViewModel::class.java)
         } ?: throw Exception(getString(R.string.invaid_activity))
 
-        mainViewModel.getInformationList().observe(this, Observer { list ->
+        mainViewModel.getInformationListLiveData().observe(this, Observer { list ->
             srlMain.isRefreshing = false
             run {
                 informationRecyclerViewAdapter.updateInformationList(list)

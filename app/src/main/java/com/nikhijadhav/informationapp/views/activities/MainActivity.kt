@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
         tbMain.title = getString(R.string.app_name)
         setSupportActionBar(tbMain as Toolbar)
         mainViewModel = ViewModelProviders.of(this, SavedStateVMFactory(this)).get(MainViewModel::class.java)
-        mainViewModel.getTitle().observe(this, Observer {tbMain.title = it})
+        mainViewModel.getTitleLiveData().observe(this, Observer {tbMain.title = it})
 
     }
 }
