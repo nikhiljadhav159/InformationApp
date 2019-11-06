@@ -5,6 +5,7 @@ import android.os.Parcelable
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.nikhijadhav.informationapp.R
 
 data class Row(var title: String? , var description: String? , var imageHref: String?) : Parcelable {
@@ -32,7 +33,8 @@ data class Row(var title: String? , var description: String? , var imageHref: St
         @BindingAdapter("logo")
         @JvmStatic
         fun loadLogo(ivLogo: ImageView, imageRef :String){
-            Glide.with(ivLogo.context).load(imageRef).thumbnail(0.5f).placeholder(R.mipmap.ic_launcher).into(ivLogo)
+            Glide.with(ivLogo.context).load(imageRef).thumbnail(0.5f).placeholder(R.mipmap.ic_launcher)
+                .diskCacheStrategy(DiskCacheStrategy.DATA).into(ivLogo)
         }
     }
 

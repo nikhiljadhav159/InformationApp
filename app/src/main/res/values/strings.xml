@@ -5,4 +5,5 @@
     <string name="no_internet">No Internet Connection</string>
     <string name="refreshing">Refreshing</string>
     <string name="invaid_activity">Invalid Activity</string>
+    <string name="something_went_wrong">Something went wrong!</string>
 </resources>

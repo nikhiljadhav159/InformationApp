@@ -1,8 +1,6 @@
 package com.nikhijadhav.informationapp.views.fragments
 
 
-import android.content.Context
-import android.net.ConnectivityManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -37,13 +35,8 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         srlMain.setOnRefreshListener {
-            if (isConnected()) {
                 Toast.makeText(activity!!, getString(R.string.refreshing), Toast.LENGTH_SHORT).show()
                 mainViewModel.callForInformationData()
-            } else {
-                Toast.makeText(activity!!, getString(R.string.no_internet), Toast.LENGTH_LONG).show()
-                srlMain.isRefreshing = false
-            }
         }
         rvMain.layoutManager = LinearLayoutManager(activity!!, RecyclerView.VERTICAL, false)
         rvMain.adapter = informationRecyclerViewAdapter
@@ -62,17 +55,17 @@ class MainFragment : Fragment() {
             }
         })
 
-        if (isConnected()) {
-            mainViewModel.callForInformationData()
-        } else {
-            Toast.makeText(activity!!, getString(R.string.no_internet), Toast.LENGTH_LONG).show()
-        }
+        mainViewModel.noInternetError.observe(this, Observer {
+            srlMain.isRefreshing = false
+            if (it) {
+                Toast.makeText(activity!!, getString(R.string.no_internet), Toast.LENGTH_LONG).show()
+            } else {
+                Toast.makeText(activity!!, getString(R.string.something_went_wrong), Toast.LENGTH_LONG).show()
+            }
+        })
+
+        mainViewModel.callForInformationData()
 
     }
 
-    fun isConnected(): Boolean {
-        val cm = activity!!.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager?
-        val netInfo = cm!!.activeNetworkInfo
-        return netInfo != null && netInfo.isConnectedOrConnecting
-    }
 }
